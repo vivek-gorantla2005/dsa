@@ -1,0 +1,51 @@
+//reverse k nodes in a list
+
+class Solution {
+public:
+    ListNode* reverse(ListNode* head) {
+        if (head == NULL || head->next == NULL) {
+            return head;
+        }
+
+        ListNode* prev = NULL;
+        ListNode* curr = head;
+        ListNode* next = NULL;
+
+        while (curr != NULL) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
+    ListNode* findKnode(ListNode* head, int k) {
+        ListNode* temp = head;
+        int count = 1;
+        while (temp != NULL && count < k) {
+            count++;
+            temp = temp->next;
+        }
+        return temp;
+    }
+
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if (head == NULL || k <= 1) {
+            return head;
+        }
+
+        ListNode* kNode = findKnode(head, k);
+        if (kNode == NULL) {
+            return head; 
+        }
+
+        ListNode* nextGroupHead = kNode->next;
+        kNode->next = NULL; 
+
+        ListNode* newHead = reverse(head); 
+        head->next = reverseKGroup(nextGroupHead, k); 
+
+        return newHead; 
+    }
+};
